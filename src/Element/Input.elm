@@ -1,6 +1,6 @@
 module Element.Input exposing
     ( focusedOnLoad
-    , button, submit
+    , button
     , checkbox, defaultCheckbox
     , text, multiline
     , Placeholder, placeholder
@@ -8,6 +8,7 @@ module Element.Input exposing
     , slider, Thumb, thumb, defaultThumb
     , radio, radioRow, Option, option, optionWith, OptionState(..)
     , Label, labelAbove, labelBelow, labelLeft, labelRight, labelHidden
+    , submit
     )
 
 {-| Input elements have a lot of constraints!
@@ -345,7 +346,9 @@ button attrs { onPress, label } =
         attrs
         { onPress = onPress
         , label = label
-        , type_ = Internal.NormalButton}
+        , type_ = Internal.NormalButton
+        }
+
 
 {-| Like `button`, but for submit buttons like those
 found in forms.
@@ -353,12 +356,12 @@ found in forms.
 submit :
     List (Attribute msg)
     ->
-        { 
-         label : Element msg
+        { label : Element msg
         }
     -> Element msg
-submit attrs {  label  } =Internal.element
-    Internal.asEl
+submit attrs { label } =
+    Internal.element
+        Internal.asEl
         Internal.div
         (Element.width Element.shrink
             :: Element.height Element.shrink
@@ -377,13 +380,12 @@ submit attrs {  label  } =Internal.element
             :: Internal.Attr (Html.Attributes.tabindex 0)
             :: Internal.Attr (Html.Attributes.attribute "aria-disabled" "false")
             :: attrs
-
         )
         (Internal.Unkeyed [ label ])
 
 
-
-customButton attrs {onPress,label,type_}=    Internal.element
+customButton attrs { onPress, label, type_ } =
+    Internal.element
         Internal.asEl
         Internal.div
         (Element.width Element.shrink
@@ -404,7 +406,6 @@ customButton attrs {onPress,label,type_}=    Internal.element
             :: (case onPress of
                     Nothing ->
                         Internal.Attr (Html.Attributes.attribute "aria-disabled" "true") :: attrs
-                        
 
                     Just msg ->
                         Events.onClick msg
@@ -421,6 +422,7 @@ customButton attrs {onPress,label,type_}=    Internal.element
                )
         )
         (Internal.Unkeyed [ label ])
+
 
 focusDefault attrs =
     if List.any hasFocusStyle attrs then

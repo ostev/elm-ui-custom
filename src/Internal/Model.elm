@@ -389,7 +389,9 @@ type NearbyChildren msg
 div =
     Generic
 
-button = NodeName "button"
+
+button =
+    NodeName "button"
 
 
 type alias Gathered msg =
@@ -1173,7 +1175,7 @@ gatherAttrRecursive classes node has transform styles attrs children elementAttr
                                 has
                                 transform
                                 styles
-                                ([VirtualDom.attribute "type"
+                                ([ VirtualDom.attribute "type"
                                     (case type_ of
                                         NormalButton ->
                                             "button"
@@ -1181,7 +1183,7 @@ gatherAttrRecursive classes node has transform styles attrs children elementAttr
                                         SubmitButton ->
                                             "submit"
                                     )
-                                    ]
+                                 ]
                                     ++ attrs
                                 )
                                 children

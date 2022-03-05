@@ -3,6 +3,7 @@ module Internal.Model exposing
     , Angle
     , Attribute(..)
     , Axis(..)
+    , ButtonType(..)
     , Children(..)
     , Color(..)
     , Description(..)
@@ -43,6 +44,7 @@ module Internal.Model exposing
     , asRow
     , asTextColumn
     , boxShadowClass
+    , button
     , columnClass
     , composeTransformation
     , contextClasses
@@ -334,8 +336,13 @@ type Description
     | Label String
     | LivePolite
     | LiveAssertive
-    | Button
+    | Button ButtonType
     | Paragraph
+
+
+type ButtonType
+    = NormalButton
+    | SubmitButton
 
 
 type Length
@@ -381,6 +388,8 @@ type NearbyChildren msg
 
 div =
     Generic
+
+button = NodeName "button"
 
 
 type alias Gathered msg =
@@ -1158,8 +1167,25 @@ gatherAttrRecursive classes node has transform styles attrs children elementAttr
                                 children
                                 remaining
 
-                        Button ->
-                            gatherAttrRecursive classes node has transform styles (VirtualDom.attribute "role" "button" :: attrs) children remaining
+                        Button type_ ->
+                            gatherAttrRecursive classes
+                                (addNodeName "button" node)
+                                has
+                                transform
+                                styles
+                                ([VirtualDom.attribute "type"
+                                    (case type_ of
+                                        NormalButton ->
+                                            "button"
+
+                                        SubmitButton ->
+                                            "submit"
+                                    )
+                                    ]
+                                    ++ attrs
+                                )
+                                children
+                                remaining
 
                         Label label ->
                             gatherAttrRecursive classes node has transform styles (VirtualDom.attribute "aria-label" label :: attrs) children remaining

@@ -1,6 +1,6 @@
 module Element.Input exposing
     ( focusedOnLoad
-    , button
+    , button, submit
     , checkbox, defaultCheckbox
     , text, multiline
     , Placeholder, placeholder
@@ -341,12 +341,24 @@ button :
         }
     -> Element msg
 button attrs { onPress, label } =
-    Internal.element
-        Internal.asEl
-        -- We don't explicitly label this node as a button,
-        -- because buttons fire a bunch of times when you hold down the enter key.
-        -- We'd like to fire just once on the enter key, which means using keyup instead of keydown.
-        -- Because we have no way to disable keydown, though our messages get doubled.
+    customButton
+        attrs
+        { onPress = onPress
+        , label = label
+        , type_ = Internal.NormalButton}
+
+{-| Like `button`, but for submit buttons like those
+found in forms.
+-}
+submit :
+    List (Attribute msg)
+    ->
+        { 
+         label : Element msg
+        }
+    -> Element msg
+submit attrs {  label  } =Internal.element
+    Internal.asEl
         Internal.div
         (Element.width Element.shrink
             :: Element.height Element.shrink
@@ -361,30 +373,54 @@ button attrs { onPress, label } =
                 )
             :: Element.pointer
             :: focusDefault attrs
-            :: Internal.Describe Internal.Button
+            :: Internal.Describe (Internal.Button Internal.SubmitButton)
+            :: Internal.Attr (Html.Attributes.tabindex 0)
+            :: Internal.Attr (Html.Attributes.attribute "aria-disabled" "false")
+            :: attrs
+
+        )
+        (Internal.Unkeyed [ label ])
+
+
+
+customButton attrs {onPress,label,type_}=    Internal.element
+        Internal.asEl
+        Internal.div
+        (Element.width Element.shrink
+            :: Element.height Element.shrink
+            :: Internal.htmlClass
+                (classes.contentCenterX
+                    ++ " "
+                    ++ classes.contentCenterY
+                    ++ " "
+                    ++ classes.seButton
+                    ++ " "
+                    ++ classes.noTextSelection
+                )
+            :: Element.pointer
+            :: focusDefault attrs
+            :: Internal.Describe (Internal.Button type_)
             :: Internal.Attr (Html.Attributes.tabindex 0)
             :: (case onPress of
                     Nothing ->
-                        Internal.Attr (Html.Attributes.disabled True) :: attrs
+                        Internal.Attr (Html.Attributes.attribute "aria-disabled" "true") :: attrs
+                        
 
                     Just msg ->
                         Events.onClick msg
-                            :: onKeyLookup
-                                (\code ->
-                                    if code == enter then
-                                        Just msg
-
-                                    else if code == space then
-                                        Just msg
-
-                                    else
-                                        Nothing
-                                )
+                            -- :: onKeyLookup
+                            --     (\code ->
+                            --         if code == enter then
+                            --             Just msg
+                            --         else if code == space then
+                            --             Just msg
+                            --         else
+                            --             Nothing
+                            --     )
                             :: attrs
                )
         )
         (Internal.Unkeyed [ label ])
-
 
 focusDefault attrs =
     if List.any hasFocusStyle attrs then

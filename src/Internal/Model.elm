@@ -5,7 +5,6 @@ module Internal.Model exposing
     , Axis(..)
     , ButtonType(..)
     , Children(..)
-    , Color(..)
     , Description(..)
     , Element(..)
     , EmbedStyle(..)
@@ -109,6 +108,7 @@ module Internal.Model exposing
 
 {-| -}
 
+import Color exposing (Color)
 import Html
 import Html.Attributes
 import Html.Keyed
@@ -366,11 +366,6 @@ type Location
     | OnLeft
     | InFront
     | Behind
-
-
-{-| -}
-type Color
-    = Rgba Float Float Float Float
 
 
 type NodeName
@@ -2195,14 +2190,17 @@ rootStyle : List (Attribute aligned msg)
 rootStyle =
     let
         families =
-            [ Typeface "Open Sans"
+            [ Typeface "San Fransisco",
+            Typeface "Segoe UI Variable"
+            , Typeface "Segoe UI"
+                ,Typeface "Open Sans"
             , Typeface "Helvetica"
             , Typeface "Verdana"
             , SansSerif
             ]
     in
-    [ StyleClass Flag.bgColor (Colored ("bg-" ++ formatColorClass (Rgba 1 1 1 0)) "background-color" (Rgba 1 1 1 0))
-    , StyleClass Flag.fontColor (Colored ("fc-" ++ formatColorClass (Rgba 0 0 0 1)) "color" (Rgba 0 0 0 1))
+    [ StyleClass Flag.bgColor (Colored ("bg-" ++ formatColorClass (Color.hsla 0 0 0 0)) "background-color" (Color.hsla 0 0 0 0))
+    , StyleClass Flag.fontColor (Colored ("fc-" ++ formatColorClass (Color.hsla 0 0 0 1)) "color" (Color.hsla 0 0 0 1))
     , StyleClass Flag.fontSize (FontSize 20)
     , StyleClass Flag.fontFamily <|
         FontFamily (List.foldl renderFontClassName "font-" families)
@@ -2308,8 +2306,7 @@ focusDefaultStyle =
     , borderColor = Nothing
     , shadow =
         Just
-            { color =
-                Rgba (155 / 255) (203 / 255) 1 1
+            { color =Color.lightGrey
             , offset = ( 0, 0 )
             , blur = 0
             , size = 3
@@ -3193,23 +3190,20 @@ floatClass x =
 
 
 formatColor : Color -> String
-formatColor (Rgba red green blue alpha) =
-    "rgba("
-        ++ String.fromInt (round (red * 255))
-        ++ ("," ++ String.fromInt (round (green * 255)))
-        ++ ("," ++ String.fromInt (round (blue * 255)))
-        ++ ("," ++ String.fromFloat alpha ++ ")")
+formatColor = Color.toCssString
 
 
 formatColorClass : Color -> String
-formatColorClass (Rgba red green blue alpha) =
-    floatClass red
+formatColorClass  color=
+    let hsla =Color.toHsla color
+    in
+    floatClass hsla.hue
         ++ "-"
-        ++ floatClass green
+        ++ floatClass hsla.saturation
         ++ "-"
-        ++ floatClass blue
+        ++ floatClass hsla.lightness
         ++ "-"
-        ++ floatClass alpha
+        ++ floatClass hsla.alpha
 
 
 spacingName x y =

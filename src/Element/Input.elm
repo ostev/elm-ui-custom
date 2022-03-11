@@ -185,7 +185,8 @@ Alternatively, see if it's reasonable to _not_ display an input if you'd normall
 
 -}
 
-import Element exposing (Attribute, Color, Element)
+import Color exposing (Color)
+import Element exposing (Attribute, Element)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events as Events
@@ -206,15 +207,15 @@ type Placeholder msg
 
 
 white =
-    Element.rgb 1 1 1
+    Color.rgb 1 1 1
 
 
 darkGrey =
-    Element.rgb (186 / 255) (189 / 255) (182 / 255)
+    Color.rgb (186 / 255) (189 / 255) (182 / 255)
 
 
 charcoal =
-    Element.rgb
+    Color.rgb
         (136 / 255)
         (138 / 255)
         (133 / 255)
@@ -319,7 +320,7 @@ The `onPress` handler will be fired either `onClick` or when the element is focu
     import Element.Input as Input
 
     blue =
-        Element.rgb255 238 238 238
+        Color.rgb255 238 238 238
 
     myButton =
         Input.button
@@ -542,8 +543,8 @@ defaultThumb =
         , Element.height (Element.px 16)
         , Border.rounded 8
         , Border.width 1
-        , Border.color (Element.rgb 0.5 0.5 0.5)
-        , Background.color (Element.rgb 1 1 1)
+        , Border.color (Color.rgb 0.5 0.5 0.5)
+        , Background.color (Color.rgb 1 1 1)
         ]
 
 
@@ -1136,8 +1137,8 @@ renderPlaceholder (Placeholder placeholderAttrs placeholderEl) forPlaceholder on
             ++ [ Font.color charcoal
                , Internal.htmlClass (classes.noTextSelection ++ " " ++ classes.passPointerEvents)
                , Element.clip
-               , Border.color (Element.rgba 0 0 0 0)
-               , Background.color (Element.rgba 0 0 0 0)
+               , Border.color (Color.rgba 0 0 0 0)
+               , Background.color (Color.rgba 0 0 0 0)
                , Element.height Element.fill
                , Element.width Element.fill
                , Element.alpha
@@ -1798,13 +1799,13 @@ defaultRadioOption optionLabel status =
             , Border.color <|
                 case status of
                     Idle ->
-                        Element.rgb (208 / 255) (208 / 255) (208 / 255)
+                        Color.rgb (208 / 255) (208 / 255) (208 / 255)
 
                     Focused ->
-                        Element.rgb (208 / 255) (208 / 255) (208 / 255)
+                        Color.rgb (208 / 255) (208 / 255) (208 / 255)
 
                     Selected ->
-                        Element.rgb (59 / 255) (153 / 255) (252 / 255)
+                        Color.rgb (59 / 255) (153 / 255) (252 / 255)
             ]
             Element.none
         , Element.el [ Element.width Element.fill, Internal.htmlClass "unfocusable" ] optionLabel
@@ -2253,24 +2254,24 @@ defaultCheckbox checked =
         , Border.rounded 3
         , Border.color <|
             if checked then
-                Element.rgb (59 / 255) (153 / 255) (252 / 255)
+                Color.hsl 211 77 99
 
             else
-                Element.rgb (211 / 255) (211 / 255) (211 / 255)
+                Color.hsl 0 0 83
         , Border.shadow
             { offset = ( 0, 0 )
             , blur = 1
             , size = 1
             , color =
                 if checked then
-                    Element.rgba (238 / 255) (238 / 255) (238 / 255) 0
+                    Color.rgba (238 / 255) (238 / 255) (238 / 255) 0
 
                 else
-                    Element.rgb (238 / 255) (238 / 255) (238 / 255)
+                    Color.rgb (238 / 255) (238 / 255) (238 / 255)
             }
         , Background.color <|
             if checked then
-                Element.rgb (59 / 255) (153 / 255) (252 / 255)
+                Color.rgb (59 / 255) (153 / 255) (252 / 255)
 
             else
                 white
